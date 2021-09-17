@@ -3,16 +3,11 @@
 using namespace std;
 
 Node::Node(float x, float y, int radius) {
-	pos = new sf::Vector2f(x, y);
-	node = new sf::CircleShape(radius);
+	pos = std::make_unique<sf::Vector2f>(sf::Vector2f(x, y));
+	node = std::make_unique<sf::CircleShape>(sf::CircleShape(radius));
 
 	//So the node is drawn with it's origin at the center of the circle.
 	node->setPosition(sf::Vector2f(pos->x-radius, pos->y-radius));
-}
-
-Node::~Node() {
-	delete pos;
-	delete node;
 }
 
 void Node::draw(sf::RenderWindow *window) {
