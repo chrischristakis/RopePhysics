@@ -3,6 +3,5 @@
 ! WORK IN PROGRESS !
 
 ### Todo:
- - Limit iterations in main loop to 60TPS
- - Get basic Verlet Integration in the program
+ - Collisions against walls
  - Add external forces to one node, such as drag and gravity.
