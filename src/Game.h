@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include <iostream>
+#include <string>
 #include <SFML/Graphics.hpp>
 
 // --SINGLETON--
@@ -12,12 +13,14 @@ private:
 
 	static Game *instance;
 	static sf::RenderWindow *window;
+	static int width;
+	static int height;
 
 public:
 	Game(Game &other) = delete;
 	void operator=(const Game &other) = delete;
 
-	static void init();
+	static void init(int width, int height, std::string title);
 
 	void pollEvents();
 	void draw();
@@ -33,6 +36,14 @@ public:
 	reference is returned, we get exceptions.*/
 	static sf::RenderWindow* getWindow() {
 		return window;
+	}
+
+	static int getWidth() {
+		return width;
+	}
+	
+	static int getHeight() {
+		return height;
 	}
 
 };

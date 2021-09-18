@@ -6,7 +6,7 @@ using namespace std::chrono;
 
 int main() {
 
-	Game::init();
+	Game::init(1000, 1000, "Rope physics");
 
 	long nsPerTick = 1e9 / 60;
 	long delta = 0;
