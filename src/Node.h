@@ -19,7 +19,7 @@ public:
 	Node(float x, float y, int radius): Node(x,y,0,0,radius) {}
 	Node(float x, float y): Node(x,y,0,0,5) {} //delegated constructor
 
-	void draw(sf::RenderWindow *window);
+	void draw();
 	void update();
 };
 

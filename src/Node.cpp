@@ -1,10 +1,10 @@
 #include "Node.h"
+#include "Game.h"
 #include <iostream>
 using namespace std;
 
 Node::Node(float x, float y, float velX, float velY, int radius) {
 	pos = std::make_unique<sf::Vector2f>(x, y);
-	//We're doing this using the Verlet Integration approach.
 	oldPos = std::make_unique<sf::Vector2f>(x - velX, y - velY);
 	
 	node = std::make_unique<sf::CircleShape>(radius);
@@ -12,8 +12,8 @@ Node::Node(float x, float y, float velX, float velY, int radius) {
 	node->setPosition(sf::Vector2f(pos->x-radius, pos->y-radius));
 }
 
-void Node::draw(sf::RenderWindow *window) {
-	window->draw(*node);
+void Node::draw() {
+	Game::getWindow()->draw(*node);
 }
 
 void Node::update() {
