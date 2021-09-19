@@ -13,6 +13,8 @@ int main() {
 	high_resolution_clock::time_point last, now;
 	last = high_resolution_clock::now();
 
+	sf::sleep(sf::seconds(4));
+
 	while (Game::getWindow()->isOpen()) {
 		
 		Game::getInstance().pollEvents();
