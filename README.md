@@ -11,3 +11,4 @@ yet, this will change) and the nodes being affected by forces like gravity, boun
  - Create sticks between nodes with active forces
  - Get mouse input to interact with program
  - Create chain of nodes with sticks inbetween
+ - UI

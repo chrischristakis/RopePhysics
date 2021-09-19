@@ -17,12 +17,11 @@ Node::Node(float x, float y, float velX, float velY, int radius) {
 }
 
 void Node::draw() {
+	node->setPosition(sf::Vector2f(pos->x - radius, pos->y - radius));
 	Game::getWindow()->draw(*node);
 }
 
 void Node::update() {
-	//cout << pos->x << " : " << pos->y << endl;
-
 	//Verlet integration
 	float vx = (pos->x - oldPos->x) * friction;
 	float vy = (pos->y - oldPos->y) * friction;
@@ -32,8 +31,13 @@ void Node::update() {
 
 	pos->x += vx;
 	pos->y += vy + gravity;
-	
-	//Collisions
+}
+
+//Keep the nodes in the window
+void  Node::constrain() {
+	float vx = (pos->x - oldPos->x) * friction;
+	float vy = (pos->y - oldPos->y) * friction;
+
 	if (pos->x > Game::getWidth()) {
 		pos->x = Game::getWidth();
 		oldPos->x = pos->x + vx * bounce;
@@ -50,6 +54,4 @@ void Node::update() {
 		pos->y = 0;
 		oldPos->y = pos->y + vy * bounce;
 	}
-
-	node->setPosition(sf::Vector2f(pos->x - radius, pos->y - radius));
 }

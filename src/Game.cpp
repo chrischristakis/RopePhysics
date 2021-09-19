@@ -1,6 +1,8 @@
 #include "Game.h"
 #include "Node.h"
+#include "Stick.h"
 #include <vector>
+#include <memory>
 
 //Cant initialize it in the class
 Game *Game::instance = nullptr;
@@ -8,9 +10,23 @@ sf::RenderWindow *Game::window = nullptr;
 int Game::width = 0;
 int Game::height = 0;
 
-Node *node1;
-Node *node2;
-sf::VertexArray line(sf::LinesStrip, 2);
+std::vector<std::shared_ptr<Node>> nodes;
+std::vector<std::unique_ptr<Stick>> sticks;
+
+void updateSticks() {
+	for (int i = 0; i < sticks.size(); i++)
+		sticks[i]->update();
+}
+
+void updateNodes() {
+	for (int i = 0; i < nodes.size(); i++)
+		nodes[i]->update();
+}
+
+void constrainNodes() {
+	for (int i = 0; i < nodes.size(); i++)
+		nodes[i]->constrain();
+}
 
 void Game::init(int w, int h, std::string title) {
 	//If already initialized:
@@ -23,12 +39,17 @@ void Game::init(int w, int h, std::string title) {
 	window = new sf::RenderWindow(sf::VideoMode(w, h), title);
 	window->setVerticalSyncEnabled(true);
 
-	node1 = new Node(500, 530, 10, -35);
-	node2 = new Node(230, 420, 44, -4);
-	line[0].position = node1->getPos();
-	line[1].position = node2->getPos();
-	line[0].color = sf::Color::Red;
-	line[1].color = sf::Color::Red;
+	nodes.emplace_back(std::make_shared<Node>(200, 200, 66, -120));
+	nodes.emplace_back(std::make_shared<Node>(390, 200, 0, 0));
+	nodes.emplace_back(std::make_shared<Node>(290, 290, 0, 0));
+	nodes.emplace_back(std::make_shared<Node>(180, 290, 0, 0));
+	
+	sticks.emplace_back(std::make_unique<Stick>(nodes[0], nodes[1]));
+	sticks.emplace_back(std::make_unique<Stick>(nodes[1], nodes[2]));
+	sticks.emplace_back(std::make_unique<Stick>(nodes[2], nodes[3]));
+	sticks.emplace_back(std::make_unique<Stick>(nodes[3], nodes[0]));
+	sticks.emplace_back(std::make_unique<Stick>(nodes[0], nodes[2]));
+	sticks.emplace_back(std::make_unique<Stick>(nodes[1], nodes[3]));
 }
 
 void Game::pollEvents() {
@@ -41,17 +62,22 @@ void Game::pollEvents() {
 
 void Game::draw() {
 	window->clear(sf::Color(30, 35, 45, 255));
-	
-	window->draw(line);
-	node1->draw();
-	node2->draw();
+
+	for (int i = 0; i < sticks.size(); i++)
+		sticks[i]->draw();
+
+	for (int i = 0; i < nodes.size(); i++)
+		nodes[i]->draw();
 
 	window->display();
 }
 
 void Game::update() {
-	node1->update();
-	node2->update();
-	line[0].position = node1->getPos();
-	line[1].position = node2->getPos();
+	updateNodes();
+	//We loop to fix the 'jelly' problem, it allows the points to adjust and correct themselves.
+	for (int i = 0; i < 4; i++)
+	{
+		updateSticks();
+		constrainNodes();
+	}
 }
