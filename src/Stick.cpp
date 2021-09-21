@@ -36,6 +36,8 @@ void Stick::update() {
 	float offsetX = dx * percent;
 	float offsetY = dy * percent;
 
-	n1->setPos(n1->getPos().x + offsetX, n1->getPos().y + offsetY);
-	n2->setPos(n2->getPos().x - offsetX, n2->getPos().y - offsetY);
+	if(!n1->getFrozen())
+		n1->setPos(n1->getPos().x + offsetX, n1->getPos().y + offsetY);
+	if (!n2->getFrozen())
+		n2->setPos(n2->getPos().x - offsetX, n2->getPos().y - offsetY);
 }

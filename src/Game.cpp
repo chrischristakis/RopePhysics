@@ -39,17 +39,31 @@ void Game::init(int w, int h, std::string title) {
 	window = new sf::RenderWindow(sf::VideoMode(w, h), title);
 	window->setVerticalSyncEnabled(true);
 
-	nodes.emplace_back(std::make_shared<Node>(200, 200, 66, -120));
-	nodes.emplace_back(std::make_shared<Node>(390, 200, 0, 0));
-	nodes.emplace_back(std::make_shared<Node>(290, 290, 0, 0));
-	nodes.emplace_back(std::make_shared<Node>(180, 290, 0, 0));
+	//nodes.emplace_back(std::make_shared<Node>(200, 200, 66, -66));
+	//nodes.emplace_back(std::make_shared<Node>(290, 200, 0, 0));
+	//nodes.emplace_back(std::make_shared<Node>(290, 290, 0, 0));
+	//nodes.emplace_back(std::make_shared<Node>(200, 290, 0, 0));
+
+	for (int i = 0; i < 10; i++)
+	{
+		float vx = (i == 4) ? 300 : 0;
+		nodes.emplace_back(std::make_shared<Node>(500, 50 * i, vx, 0));
+	}
+	nodes[0]->setFrozen(true);
+
+	for (int i = 0; i < 9; i++)
+		sticks.emplace_back(std::make_unique<Stick>(nodes[i], nodes[i + 1]));
 	
+	//sticks.emplace_back(std::make_unique<Stick>(nodes[0], nodes[1]));
+	//sticks.emplace_back(std::make_unique<Stick>(nodes[1], nodes[2]));
+	//sticks.emplace_back(std::make_unique<Stick>(nodes[2], nodes[3]));
+	//sticks.emplace_back(std::make_unique<Stick>(nodes[3], nodes[0]));
+	//sticks.emplace_back(std::make_unique<Stick>(nodes[0], nodes[2]));
+	//sticks.emplace_back(std::make_unique<Stick>(nodes[1], nodes[3]));
+
 	sticks.emplace_back(std::make_unique<Stick>(nodes[0], nodes[1]));
 	sticks.emplace_back(std::make_unique<Stick>(nodes[1], nodes[2]));
 	sticks.emplace_back(std::make_unique<Stick>(nodes[2], nodes[3]));
-	sticks.emplace_back(std::make_unique<Stick>(nodes[3], nodes[0]));
-	sticks.emplace_back(std::make_unique<Stick>(nodes[0], nodes[2]));
-	sticks.emplace_back(std::make_unique<Stick>(nodes[1], nodes[3]));
 }
 
 void Game::pollEvents() {

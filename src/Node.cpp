@@ -23,35 +23,39 @@ void Node::draw() {
 
 void Node::update() {
 	//Verlet integration
-	float vx = (pos->x - oldPos->x) * friction;
-	float vy = (pos->y - oldPos->y) * friction;
+	if(!frozen) {
+		float vx = (pos->x - oldPos->x) * friction;
+		float vy = (pos->y - oldPos->y) * friction;
 
-	oldPos->x = pos->x;
-	oldPos->y = pos->y;
+		oldPos->x = pos->x;
+		oldPos->y = pos->y;
 
-	pos->x += vx;
-	pos->y += vy + gravity;
+		pos->x += vx;
+		pos->y += vy + gravity;
+	}
 }
 
 //Keep the nodes in the window
 void  Node::constrain() {
-	float vx = (pos->x - oldPos->x) * friction;
-	float vy = (pos->y - oldPos->y) * friction;
+	if (!frozen) {
+		float vx = (pos->x - oldPos->x) * friction;
+		float vy = (pos->y - oldPos->y) * friction;
 
-	if (pos->x > Game::getWidth()) {
-		pos->x = Game::getWidth();
-		oldPos->x = pos->x + vx * bounce;
-	}
-	if (pos->x < 0) {
-		pos->x = 0;
-		oldPos->x = pos->x + vx * bounce;
-	}
-	if (pos->y > Game::getHeight()) {
-		pos->y = Game::getHeight();
-		oldPos->y = pos->y + vy * bounce;
-	}
-	if (pos->y < 0) {
-		pos->y = 0;
-		oldPos->y = pos->y + vy * bounce;
+		if (pos->x > Game::getWidth()) {
+			pos->x = Game::getWidth();
+			oldPos->x = pos->x + vx * bounce;
+		}
+		if (pos->x < 0) {
+			pos->x = 0;
+			oldPos->x = pos->x + vx * bounce;
+		}
+		if (pos->y > Game::getHeight()) {
+			pos->y = Game::getHeight();
+			oldPos->y = pos->y + vy * bounce;
+		}
+		if (pos->y < 0) {
+			pos->y = 0;
+			oldPos->y = pos->y + vy * bounce;
+		}
 	}
 }
