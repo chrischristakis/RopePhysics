@@ -13,14 +13,53 @@ int Game::height = 0;
 std::vector<std::shared_ptr<Node>> nodes;
 std::vector<std::unique_ptr<Stick>> sticks;
 
+//For dragging a node with the mouse
+std::shared_ptr<Node> selectedNode = nullptr;
+bool rightHeld = false;
+
 void updateSticks() {
 	for (int i = 0; i < sticks.size(); i++)
 		sticks[i]->update();
 }
 
 void updateNodes() {
-	for (int i = 0; i < nodes.size(); i++)
-		nodes[i]->update();
+	for (std::shared_ptr<Node> node : nodes) { 
+		sf::Vector2i mpos = sf::Mouse::getPosition(*Game::getWindow()); //relative to window
+		sf::Vector2f npos = node->getPos();
+
+		//Distance from mouse to node
+		float distance = sqrt((mpos.x - npos.x) * (mpos.x - npos.x) + (mpos.y - npos.y) * (mpos.y - npos.y));
+
+		if (distance <= node->radius
+			&& sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)
+			&& !selectedNode)
+			selectedNode = node;
+
+		//Toggle a frozen node
+		if (distance <= node->radius
+			&& sf::Mouse::isButtonPressed(sf::Mouse::Button::Right))
+			if (!rightHeld) { //So it doesn't spasm until you release
+				node->frozen = !node->frozen;
+				rightHeld = true;
+			}
+
+		if (!sf::Mouse::isButtonPressed(sf::Mouse::Right))
+			rightHeld = false;
+
+		//Unselect the node once we release the mouse
+		if (!sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && selectedNode) {
+			selectedNode->selected = false;
+			selectedNode = nullptr;
+		}
+
+		if (selectedNode) {
+			selectedNode->selected = true;
+			selectedNode->setPos(mpos.x, mpos.y);
+			selectedNode->setOldPos(mpos.x, mpos.y); //to keep velocity = 0
+		}
+
+		node->update();
+	}
 }
 
 void constrainNodes() {
@@ -39,31 +78,12 @@ void Game::init(int w, int h, std::string title) {
 	window = new sf::RenderWindow(sf::VideoMode(w, h), title);
 	window->setVerticalSyncEnabled(true);
 
-	//nodes.emplace_back(std::make_shared<Node>(200, 200, 66, -66));
-	//nodes.emplace_back(std::make_shared<Node>(290, 200, 0, 0));
-	//nodes.emplace_back(std::make_shared<Node>(290, 290, 0, 0));
-	//nodes.emplace_back(std::make_shared<Node>(200, 290, 0, 0));
+	for (int i = 0; i < 14; i++)
+		nodes.emplace_back(std::make_shared<Node>(500, 50 * i, 0, 0));
+	nodes[0]->frozen = true;
 
-	for (int i = 0; i < 10; i++)
-	{
-		float vx = (i == 4) ? 300 : 0;
-		nodes.emplace_back(std::make_shared<Node>(500, 50 * i, vx, 0));
-	}
-	nodes[0]->setFrozen(true);
-
-	for (int i = 0; i < 9; i++)
+	for (int i = 0; i < 13; i++)
 		sticks.emplace_back(std::make_unique<Stick>(nodes[i], nodes[i + 1]));
-	
-	//sticks.emplace_back(std::make_unique<Stick>(nodes[0], nodes[1]));
-	//sticks.emplace_back(std::make_unique<Stick>(nodes[1], nodes[2]));
-	//sticks.emplace_back(std::make_unique<Stick>(nodes[2], nodes[3]));
-	//sticks.emplace_back(std::make_unique<Stick>(nodes[3], nodes[0]));
-	//sticks.emplace_back(std::make_unique<Stick>(nodes[0], nodes[2]));
-	//sticks.emplace_back(std::make_unique<Stick>(nodes[1], nodes[3]));
-
-	sticks.emplace_back(std::make_unique<Stick>(nodes[0], nodes[1]));
-	sticks.emplace_back(std::make_unique<Stick>(nodes[1], nodes[2]));
-	sticks.emplace_back(std::make_unique<Stick>(nodes[2], nodes[3]));
 }
 
 void Game::pollEvents() {

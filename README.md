@@ -21,7 +21,4 @@ These polygons have physics applied to them as well don't interact with eachothe
 
 ### Todo:
 
- - Add properties to the nodes and sticks to allow some nodes to be unaffected by any forces
- - Create a rope with adjustable properties
- - Get mouse input to interact with program
- - UI (Imgui)
+ - Nothing!
