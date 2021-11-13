@@ -17,7 +17,7 @@ RopePhysics was made using C++ and SFML for rendering.
 ### Final demo:<br>
 I think by this point, I've hit all the functionality I wanted to look for in this project, a detailed list is at the top of the readme.
 Now there's a believable rope that you can interact with and do some pretty cool stuff with. This was a neat overview for Verlet integration
-and I definitely see myself using it down the line (It'll have immidiate applications in a game I'm about to start working on.) 
+and I definitely see myself using it down the line (No pun intended) 
 Here's a showcase of some of the things it's capable of:<br>
 <img src="demos/rope4.gif" alt="drawing" width="370"/><br>
 <img src="demos/rope5.gif" alt="drawing" width="370"/><br>
